@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/widgets/modern_dialog.dart';
+import '../../core/widgets/capsule_button.dart';
 import 'models/game_result.dart';
 import 'models/game_data.dart';
 import 'services/game_history_service.dart';
@@ -382,54 +383,26 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         child: Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
+              child: CapsuleButtons.outlined(
+                text: _isSaving ? '저장 중...' : '확인 & 홈으로',
+                icon: _isSaving ? null : Icons.home_outlined,
                 onPressed: _isSaving ? null : () => _saveAndGoHome(context),
-                icon: _isSaving 
-                    ? SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: isDark ? AppColors.textLight : AppColors.textPrimary,
-                        ),
-                      )
-                    : const Icon(Icons.home_outlined),
-                label: Text(_isSaving ? '저장 중...' : '확인 & 홈으로'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: BorderSide(
-                    color: isDark ? AppColors.textLight.withValues(alpha: 0.3) : AppColors.primary.withValues(alpha: 0.3),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                width: double.infinity,
+                height: 56,
+                fontSize: 16,
+                isLoading: _isSaving,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: ElevatedButton.icon(
+              child: CapsuleButtons.primary(
+                text: _isSharing ? '공유 중...' : '결과 공유하기',
+                icon: _isSharing ? null : Icons.share,
                 onPressed: _isSharing ? null : _shareResults,
-                icon: _isSharing 
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Icon(Icons.share),
-                label: Text(_isSharing ? '공유 중...' : '결과 공유하기'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 2,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                width: double.infinity,
+                height: 56,
+                fontSize: 16,
+                isLoading: _isSharing,
               ),
             ),
           ],

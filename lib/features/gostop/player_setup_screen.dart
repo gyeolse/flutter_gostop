@@ -5,6 +5,7 @@ import '../../services/snackbar_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/widgets/modern_dialog.dart';
 import '../../core/widgets/modern_input_dialog.dart';
+import '../../core/widgets/capsule_button.dart';
 import 'models/player.dart';
 import 'widgets/player_card.dart';
 import 'services/players_service.dart';
@@ -536,26 +537,17 @@ class _PlayerSetupScreenState extends ConsumerState<PlayerSetupScreen> {
               child: SafeArea(
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
+                  child: CapsuleButtons.primary(
+                    text: selectedCount >= 2 && selectedCount <= 4 
+                        ? '게임 시작 ($selectedCount명)'
+                        : '플레이어를 2~4명 선택하세요',
+                    icon: Icons.play_arrow,
                     onPressed: selectedCount >= 2 && selectedCount <= 4 
                         ? _startGame 
                         : null,
-                    icon: const Icon(Icons.play_arrow),
-                    label: Text(selectedCount >= 2 && selectedCount <= 4 
-                        ? '게임 시작 ($selectedCount명)'
-                        : '플레이어를 2~4명 선택하세요'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 4,
-                    ),
+                    width: double.infinity,
+                    height: 60,
+                    fontSize: 18,
                   ),
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/widgets/capsule_button.dart';
 import '../models/player.dart';
 import '../models/score_input.dart';
 import '../models/game_rules.dart';
@@ -556,39 +557,23 @@ class ScoreResultDialog extends StatelessWidget {
         children: [
           if (isGameEnd) ...[
             Expanded(
-              child: ElevatedButton.icon(
+              child: CapsuleButtons.primary(
+                text: '최종 결과 보기',
+                icon: Icons.emoji_events,
                 onPressed: onResultPressed,
-                icon: const Icon(Icons.emoji_events),
-                label: const Text('최종 결과 보기'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber.shade400,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                width: double.infinity,
+                height: 48,
+                fontSize: 16,
               ),
             ),
           ] else ...[
             Expanded(
-              child: ElevatedButton(
+              child: CapsuleButtons.primary(
+                text: '확인',
                 onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  '확인',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                width: double.infinity,
+                height: 48,
+                fontSize: 16,
               ),
             ),
           ],

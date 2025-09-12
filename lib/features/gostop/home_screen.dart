@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/snackbar_service.dart';
 import '../../core/app_colors.dart';
+import '../../core/widgets/capsule_button.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -68,43 +69,29 @@ class HomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // 게임 시작 버튼
-                  ElevatedButton.icon(
+                  CapsuleButtons.primary(
+                    text: '게임 시작',
+                    icon: Icons.play_arrow,
                     onPressed: () {
                       context.push('/game-setup');
                     },
-                    icon: const Icon(
-                      Icons.play_arrow,
-                      size: 24,
-                    ),
-                    label: const Text('게임 시작'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    width: double.infinity,
+                    height: 60,
+                    fontSize: 18,
                   ),
                   
                   const SizedBox(height: 16),
                   
                   // 이전 기록 보기 버튼
-                  OutlinedButton.icon(
+                  CapsuleButtons.outlined(
+                    text: '이전 기록 보기',
+                    icon: Icons.history,
                     onPressed: () {
                       context.push('/history');
                     },
-                    icon: const Icon(
-                      Icons.history,
-                      size: 24,
-                    ),
-                    label: const Text('이전 기록 보기'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    width: double.infinity,
+                    height: 60,
+                    fontSize: 18,
                   ),
                 ],
               ),

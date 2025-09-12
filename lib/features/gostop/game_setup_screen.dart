@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/app_colors.dart';
+import '../../core/widgets/capsule_button.dart';
 
 class GameSetupScreen extends ConsumerWidget {
   const GameSetupScreen({super.key});
@@ -40,33 +41,25 @@ class GameSetupScreen extends ConsumerWidget {
             const SizedBox(height: 48),
             
             // 규칙 설정 버튼
-            ElevatedButton.icon(
+            CapsuleButtons.primary(
+              text: '게임 규칙 설정',
+              icon: Icons.rule,
               onPressed: () => context.push('/rule-setup'),
-              icon: const Icon(Icons.rule),
-              label: const Text('게임 규칙 설정'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              width: double.infinity,
+              height: 60,
+              fontSize: 18,
             ),
             
             const SizedBox(height: 16),
             
             // 플레이어 설정 버튼
-            OutlinedButton.icon(
+            CapsuleButtons.outlined(
+              text: '플레이어 설정',
+              icon: Icons.people,
               onPressed: () => context.push('/player-setup'),
-              icon: const Icon(Icons.people),
-              label: const Text('플레이어 설정'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              width: double.infinity,
+              height: 60,
+              fontSize: 18,
             ),
             
             const SizedBox(height: 32),
