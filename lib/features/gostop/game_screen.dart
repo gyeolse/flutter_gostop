@@ -91,6 +91,22 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final gameData = ref.read(gameDataProvider);
     if (gameData == null) return;
 
+    // 게임이 시작되지 않았다면 (아무 라운드도 진행되지 않았다면) 바로 홈으로 이동
+    if (gameData.currentRound == 1 && gameData.totalScores.values.every((s) => s == 0)) {
+      ModernConfirmDialog.show(
+        context,
+        title: '게임 종료',
+        content: '아직 게임이 시작되지 않았습니다.\n홈으로 돌아가시겠습니까?',
+        confirmText: '홈으로',
+        cancelText: '취소',
+        icon: Icons.home,
+        iconColor: AppColors.primary,
+        confirmColor: AppColors.primary,
+        onConfirm: () => context.go('/'),
+      );
+      return;
+    }
+
     // 총합 점수를 기반으로 가짜 ScoreInput 생성 (게임 종료용)
     final winnerEntry = gameData.totalScores.entries.reduce((a, b) => a.value > b.value ? a : b);
     final winner = gameData.players.firstWhere((p) => p.id == winnerEntry.key);
@@ -98,33 +114,35 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final gameRules = await ref.read(gameRulesServiceProvider).loadGameRules();
     final totalScores = gameData.totalScores;
     
-    showDialog(
-      context: context,
-      builder: (context) => ScoreResultDialog(
-        players: gameData.players,
-        scoreInput: ScoreInput(
-          winnerId: winner.id,
-          winnerScore: 0,
-          loserPenalties: {},
-          specialSituations: {},
-          continuousFailures: {},
-          gwangSelling: {},
-          isPresident: false,
-          isTripleFailure: false,
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => ScoreResultDialog(
+          players: gameData.players,
+          scoreInput: ScoreInput(
+            winnerId: winner.id,
+            winnerScore: 0,
+            loserPenalties: {},
+            specialSituations: {},
+            continuousFailures: {},
+            gwangSelling: {},
+            isPresident: false,
+            isTripleFailure: false,
+          ),
+          calculatedScores: totalScores,
+          gameRules: gameRules,
+          gwangSellingCount: {},
+          isGameEnd: true,
+          onResultPressed: () {
+            Navigator.of(context).pop(); // 다이얼로그 닫기
+            context.go('/result', extra: {
+              'gameData': gameData,
+              'finalScores': totalScores,
+            });
+          },
         ),
-        calculatedScores: totalScores,
-        gameRules: gameRules,
-        gwangSellingCount: {},
-        isGameEnd: true,
-        onResultPressed: () {
-          Navigator.of(context).pop(); // 다이얼로그 닫기
-          context.go('/result', extra: {
-            'gameData': gameData,
-            'finalScores': totalScores,
-          });
-        },
-      ),
-    );
+      );
+    }
   }
   
   void _onRoundCompleted(ScoreInput scoreInput, bool isGameEnd, Map<String, int> gwangSellingCount) async {

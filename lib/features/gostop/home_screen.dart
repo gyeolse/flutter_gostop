@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              
+
               // App Logo/Title Section
               Column(
                 children: [
@@ -61,9 +61,9 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 64),
-              
+
               // Main Action Buttons
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,9 +79,9 @@ class HomeScreen extends ConsumerWidget {
                     height: 60,
                     fontSize: 18,
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // 이전 기록 보기 버튼
                   CapsuleButtons.outlined(
                     text: '이전 기록 보기',
@@ -95,34 +95,33 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const Spacer(),
-              
-              // Settings Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton.filled(
-                    onPressed: () {
-                      context.push('/settings');
-                    },
-                    icon: const Icon(Icons.settings),
-                    iconSize: 24,
-                    style: IconButton.styleFrom(
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
-                      foregroundColor: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    '설정',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-              
+
+              // // Settings Button
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     IconButton.filled(
+              //       onPressed: () {
+              //         context.push('/settings');
+              //       },
+              //       icon: const Icon(Icons.settings),
+              //       iconSize: 24,
+              //       style: IconButton.styleFrom(
+              //         backgroundColor: AppColors.primary.withOpacity(0.1),
+              //         foregroundColor: AppColors.primary,
+              //       ),
+              //     ),
+              //     const SizedBox(width: 16),
+              //     Text(
+              //       '설정',
+              //       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              //         color: AppColors.textSecondary,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(height: 24),
             ],
           ),

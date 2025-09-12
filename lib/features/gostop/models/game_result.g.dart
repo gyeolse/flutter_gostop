@@ -70,13 +70,14 @@ class PlayerResultAdapter extends TypeAdapter<PlayerResult> {
       loseCount: fields[4] as int,
       finalAmount: fields[5] as int,
       highestScore: fields[6] as int,
+      bestRoundNumber: fields[7] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlayerResult obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.playerId)
       ..writeByte(1)
@@ -90,7 +91,9 @@ class PlayerResultAdapter extends TypeAdapter<PlayerResult> {
       ..writeByte(5)
       ..write(obj.finalAmount)
       ..writeByte(6)
-      ..write(obj.highestScore);
+      ..write(obj.highestScore)
+      ..writeByte(7)
+      ..write(obj.bestRoundNumber);
   }
 
   @override

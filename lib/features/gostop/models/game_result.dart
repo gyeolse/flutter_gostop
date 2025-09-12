@@ -64,39 +64,39 @@ class GameResult extends HiveObject {
   // 정산 계산 - 누가 누구에게 얼마를 줘야하는지
   List<Settlement> calculateSettlements() {
     final List<Settlement> settlements = [];
-    final List<PlayerResult> creditors = []; // 받을 사람들 (양수)
-    final List<PlayerResult> debtors = []; // 줄 사람들 (음수)
+    final List<_SettlementPlayer> creditors = []; // 받을 사람들 (양수)
+    final List<_SettlementPlayer> debtors = []; // 줄 사람들 (음수)
 
-    // 채권자와 채무자 분리
+    // 채권자와 채무자 분리 (복사본 생성)
     for (final player in players) {
       if (player.finalAmount > 0) {
-        creditors.add(player);
+        creditors.add(_SettlementPlayer(player.playerName, player.finalAmount));
       } else if (player.finalAmount < 0) {
-        debtors.add(player);
+        debtors.add(_SettlementPlayer(player.playerName, player.finalAmount));
       }
     }
 
     // 정산 계산
     for (final debtor in debtors) {
-      int remainingDebt = -debtor.finalAmount; // 음수를 양수로 변환
+      int remainingDebt = -debtor.amount; // 음수를 양수로 변환
 
       for (final creditor in creditors) {
         if (remainingDebt <= 0) break;
 
-        int availableCredit = creditor.finalAmount;
+        int availableCredit = creditor.amount;
         if (availableCredit <= 0) continue;
 
         int transferAmount = remainingDebt < availableCredit ? remainingDebt : availableCredit;
 
         settlements.add(Settlement(
-          from: debtor.playerName,
-          to: creditor.playerName,
+          from: debtor.name,
+          to: creditor.name,
           amount: transferAmount,
         ));
 
         remainingDebt -= transferAmount;
-        // 채권자의 남은 금액 업데이트 (실제 객체는 변경하지 않음)
-        creditor.finalAmount -= transferAmount;
+        // 채권자의 남은 금액 업데이트 (복사본만 변경)
+        creditor.amount -= transferAmount;
       }
     }
 
@@ -127,6 +127,9 @@ class PlayerResult extends HiveObject {
   @HiveField(6)
   final int highestScore; // 최고 점수
 
+  @HiveField(7)
+  final int bestRoundNumber; // 최고 점수를 낸 라운드 번호
+
   PlayerResult({
     required this.playerId,
     required this.playerName,
@@ -135,6 +138,7 @@ class PlayerResult extends HiveObject {
     required this.loseCount,
     required this.finalAmount,
     required this.highestScore,
+    required this.bestRoundNumber,
   });
 
   // Factory constructor to create from Player and game data
@@ -144,6 +148,7 @@ class PlayerResult extends HiveObject {
     required int loseCount,
     required int finalAmount,
     required int highestScore,
+    required int bestRoundNumber,
   }) {
     return PlayerResult(
       playerId: player.id,
@@ -153,6 +158,7 @@ class PlayerResult extends HiveObject {
       loseCount: loseCount,
       finalAmount: finalAmount,
       highestScore: highestScore,
+      bestRoundNumber: bestRoundNumber,
     );
   }
 }
@@ -173,4 +179,12 @@ class Settlement extends HiveObject {
     required this.to,
     required this.amount,
   });
+}
+
+// 정산 계산용 헬퍼 클래스
+class _SettlementPlayer {
+  final String name;
+  int amount;
+
+  _SettlementPlayer(this.name, this.amount);
 }

@@ -27,7 +27,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final results = GameHistoryService.getAllGameResults();
       setState(() {
@@ -56,19 +56,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(
-                Icons.history,
-                color: Colors.white,
-                size: 20,
-              ),
+              child: const Icon(Icons.history, color: Colors.white, size: 20),
             ),
             const SizedBox(width: 12),
             const Text(
               '게임 기록',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -88,8 +81,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _gameResults.isEmpty
-              ? _buildEmptyState()
-              : _buildGameHistoryList(),
+          ? _buildEmptyState()
+          : _buildGameHistoryList(),
     );
   }
 
@@ -98,11 +91,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.history,
-            size: 80,
-            color: AppColors.textSecondary,
-          ),
+          Icon(Icons.history, size: 80, color: AppColors.textSecondary),
           SizedBox(height: 24),
           Text(
             '아직 게임 기록이 없습니다',
@@ -115,10 +104,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           SizedBox(height: 16),
           Text(
             '게임을 완료하면 기록이 여기에 표시됩니다',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -145,13 +131,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   Widget _buildGameResultCard(GameResult gameResult, int index) {
     final winner = gameResult.winner;
     final settlements = gameResult.calculateSettlements();
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () => _showGameResultDetails(gameResult),
@@ -184,7 +168,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -200,9 +187,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // 우승자 정보
               if (winner != null) ...[
                 Row(
@@ -246,7 +233,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              
+
               // 플레이어별 최종 금액
               Container(
                 padding: const EdgeInsets.all(12),
@@ -280,17 +267,17 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                               ),
                             ),
                             Text(
-                              player.finalAmount > 0 
+                              player.finalAmount > 0
                                   ? '+${_formatCurrency(player.finalAmount)}'
                                   : _formatCurrency(player.finalAmount),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: player.finalAmount > 0 
+                                color: player.finalAmount > 0
                                     ? Colors.green.shade600
                                     : player.finalAmount < 0
-                                        ? Colors.red.shade600
-                                        : AppColors.textSecondary,
+                                    ? Colors.red.shade600
+                                    : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -300,7 +287,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   ],
                 ),
               ),
-              
+
               // 게임 시간
               const SizedBox(height: 12),
               Row(
@@ -313,10 +300,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   const SizedBox(width: 6),
                   Text(
                     '게임 시간: ${_formatDuration(gameResult.gameDuration)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                   ),
                 ],
               ),
@@ -331,40 +315,48 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final settlements = gameResult.calculateSettlements();
     final winner = gameResult.winner;
     final bestPlayer = gameResult.bestRoundPlayer;
-    
+
     ModernInfoDialog.show(
       context,
       title: '게임 상세 기록',
-      content: _buildDetailedContent(gameResult, settlements, winner, bestPlayer),
+      content: _buildDetailedContent(
+        gameResult,
+        settlements,
+        winner,
+        bestPlayer,
+      ),
       icon: Icons.info_outline,
       iconColor: AppColors.primary,
     );
   }
 
-  String _buildDetailedContent(GameResult gameResult, List<Settlement> settlements, 
-      PlayerResult? winner, PlayerResult? bestPlayer) {
+  String _buildDetailedContent(
+    GameResult gameResult,
+    List<Settlement> settlements,
+    PlayerResult? winner,
+    PlayerResult? bestPlayer,
+  ) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('📅 게임 날짜: ${_formatDateTime(gameResult.gameDate)}');
     buffer.writeln('⏱️ 게임 시간: ${_formatDuration(gameResult.gameDuration)}');
     buffer.writeln('🎯 총 라운드: ${gameResult.totalRounds}판');
     buffer.writeln('');
-    
+
     if (winner != null) {
-      buffer.writeln('🏆 우승자: ${winner.playerName} (${_formatCurrency(winner.finalAmount)})');
+      buffer.writeln(
+        '🏆 우승자: ${winner.playerName} (${_formatCurrency(winner.finalAmount)})',
+      );
       buffer.writeln('');
     }
-    
-    if (bestPlayer != null) {
-      buffer.writeln('⭐ 최고 점수: ${bestPlayer.playerName} (${bestPlayer.highestScore}점)');
-      buffer.writeln('');
-    }
-    
+
     buffer.writeln('💰 정산 내역:');
     for (final settlement in settlements) {
-      buffer.writeln('${settlement.from} → ${settlement.to}: ${_formatCurrency(settlement.amount)}');
+      buffer.writeln(
+        '${settlement.from} → ${settlement.to}: ${_formatCurrency(settlement.amount)}',
+      );
     }
-    
+
     return buffer.toString();
   }
 
@@ -383,15 +375,15 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           await GameHistoryService.deleteGameResult(index);
           _loadGameHistory();
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('게임 기록이 삭제되었습니다')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('게임 기록이 삭제되었습니다')));
           }
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('삭제 중 오류가 발생했습니다')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('삭제 중 오류가 발생했습니다')));
           }
         }
       },
@@ -413,15 +405,15 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           await GameHistoryService.clearAllGameResults();
           _loadGameHistory();
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('모든 게임 기록이 삭제되었습니다')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('모든 게임 기록이 삭제되었습니다')));
           }
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('삭제 중 오류가 발생했습니다')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('삭제 중 오류가 발생했습니다')));
           }
         }
       },
@@ -447,7 +439,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    
+
     if (hours > 0) {
       return '${hours}시간 ${minutes}분';
     } else {

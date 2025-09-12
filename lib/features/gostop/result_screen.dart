@@ -319,7 +319,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${bestPlayer.playerName} (${bestPlayer.highestScore}점)',
+                            '${bestPlayer.playerName} (${bestPlayer.highestScore}원, ${bestPlayer.bestRoundNumber}라운드)',
                             style: theme.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: AppColors.primary,
@@ -419,19 +419,32 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     final Map<String, int> winCounts = {};
     final Map<String, int> loseCounts = {};
     final Map<String, int> highestScores = {};
+    final Map<String, int> bestRoundNumbers = {};
     
     // 초기화
     for (final player in gameData.players) {
       winCounts[player.id] = 0;
       loseCounts[player.id] = 0;
       highestScores[player.id] = 0;
+      bestRoundNumbers[player.id] = 0;
     }
     
-    // 각 라운드별 점수에서 최고점 찾기
+    // 각 라운드별 점수에서 최고점과 해당 라운드 찾기
     for (final player in gameData.players) {
       final playerScoreList = gameData.playerScores[player.id] ?? [];
       if (playerScoreList.isNotEmpty) {
-        highestScores[player.id] = playerScoreList.reduce((a, b) => a > b ? a : b);
+        int maxScore = playerScoreList[0];
+        int bestRound = 1;
+        
+        for (int i = 0; i < playerScoreList.length; i++) {
+          if (playerScoreList[i] > maxScore) {
+            maxScore = playerScoreList[i];
+            bestRound = i + 1;
+          }
+        }
+        
+        highestScores[player.id] = maxScore;
+        bestRoundNumbers[player.id] = bestRound;
       }
     }
     
@@ -458,6 +471,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         loseCount: loseCounts[player.id] ?? 0,
         finalAmount: finalScores[player.id] ?? 0,
         highestScore: highestScores[player.id] ?? 0,
+        bestRoundNumber: bestRoundNumbers[player.id] ?? 0,
       );
     }).toList();
     
