@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../services/snackbar_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/widgets/modern_dialog.dart';
-import '../../core/widgets/modern_input_dialog.dart';
 import '../../core/widgets/capsule_button.dart';
 import 'models/player.dart';
 import 'widgets/player_card.dart';
+import 'widgets/player_edit_dialog.dart';
 import 'services/players_service.dart';
 
 // 플레이어 상태 관리
@@ -71,6 +71,24 @@ class PlayersNotifier extends StateNotifier<List<Player>> {
     state = updatedPlayers;
   }
 
+  Future<void> editPlayer(String playerId, String newName, String newAvatar) async {
+    if (newName.trim().isEmpty) return;
+    
+    final updatedPlayers = state.map((player) {
+      if (player.id == playerId) {
+        final updatedPlayer = player.copyWith(
+          name: newName.trim(),
+          avatarPath: newAvatar,
+        );
+        PlayersService.updatePlayer(updatedPlayer);
+        return updatedPlayer;
+      }
+      return player;
+    }).toList();
+    
+    state = updatedPlayers;
+  }
+
   List<Player> get selectedPlayers {
     return state.where((player) => player.isSelected).toList();
   }
@@ -111,23 +129,12 @@ class _PlayerSetupScreenState extends ConsumerState<PlayerSetupScreen> {
   }
 
   void _editPlayer(Player player) {
-    ModernInputDialog.show(
+    PlayerEditDialog.show(
       context,
-      title: '플레이어 이름 수정',
-      labelText: '새 이름',
-      initialValue: player.name,
-      confirmText: '저장',
-      cancelText: '취소',
-      icon: Icons.edit,
-      iconColor: AppColors.primary,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return '이름을 입력해주세요';
-        }
-        return null;
-      },
-      onConfirm: (newName) {
-        ref.read(playersProvider.notifier).editPlayerName(player.id, newName);
+      player: player,
+      onSave: (newName, newAvatar) {
+        ref.read(playersProvider.notifier).editPlayer(player.id, newName, newAvatar);
+        ref.read(snackbarServiceProvider).showSuccess('플레이어 정보가 수정되었습니다');
       },
     );
   }
@@ -196,8 +203,20 @@ class _PlayerSetupScreenState extends ConsumerState<PlayerSetupScreen> {
           if (players.isNotEmpty)
             TextButton.icon(
               onPressed: () {
-                ref.read(playersProvider.notifier).clearAll();
-                ref.read(snackbarServiceProvider).showInfo('모든 플레이어가 삭제되었습니다');
+                ModernConfirmDialog.show(
+                  context,
+                  title: '전체 삭제',
+                  content: '모든 플레이어를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
+                  confirmText: '전체 삭제',
+                  cancelText: '취소',
+                  icon: Icons.delete_sweep,
+                  iconColor: AppColors.error,
+                  confirmColor: AppColors.error,
+                  onConfirm: () {
+                    ref.read(playersProvider.notifier).clearAll();
+                    ref.read(snackbarServiceProvider).showInfo('모든 플레이어가 삭제되었습니다');
+                  },
+                );
               },
               icon: const Icon(Icons.clear_all, size: 20),
               label: const Text('전체 삭제'),

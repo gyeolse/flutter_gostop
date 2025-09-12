@@ -83,7 +83,8 @@ class ScoreResultDialog extends StatelessWidget {
 
   Widget _buildHeader(Player winner) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isGameEnd 
@@ -97,39 +98,70 @@ class ScoreResultDialog extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            isGameEnd ? Icons.emoji_events : Icons.calculate,
-            color: Colors.white,
-            size: 48,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            isGameEnd ? '🎉 게임 종료!' : '점수 계산 완료',
-            style: const TextStyle(
+          // 메인 아이콘을 더 세련되게
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isGameEnd ? Icons.emoji_events : Icons.calculate,
               color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+              size: 40,
             ),
           ),
+          const SizedBox(height: 20),
+          
+          // 메인 제목
+          Text(
+            isGameEnd ? '🎉 게임 종료!' : '✨ 점수 계산 완료',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // 승자 정보를 더 강조
           if (!isGameEnd) ...[
-            const SizedBox(height: 8),
-            Text(
-              '${winner.name}님이 ${scoreInput.winnerScore}점으로 승리!',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                '${winner.name}님이 ${scoreInput.winnerScore}점으로 승리!',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ] else ...[
-            const SizedBox(height: 8),
-            Text(
-              '최종 우승자: ${winner.name}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '👑',
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '최종 우승자: ${winner.name}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
             ),
           ],
         ],

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../services/game_rules_service.dart';
 import '../../services/snackbar_service.dart';
 import '../../core/app_colors.dart';
+import '../../core/widgets/capsule_button.dart';
 import 'models/game_rules.dart';
 
 class RuleSetupScreen extends ConsumerStatefulWidget {
@@ -288,31 +289,14 @@ class _RuleSetupScreenState extends ConsumerState<RuleSetupScreen> {
               child: SafeArea(
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
+                  child: CapsuleButtons.primary(
+                    text: _isLoading ? '저장 중...' : '다음',
+                    icon: _isLoading ? null : Icons.arrow_forward,
                     onPressed: _isLoading ? null : _saveRules,
-                    icon: _isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Icon(Icons.arrow_forward),
-                    label: Text(_isLoading ? '저장 중...' : '다음'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 4,
-                    ),
+                    width: double.infinity,
+                    height: 60,
+                    fontSize: 18,
+                    isLoading: _isLoading,
                   ),
                 ),
               ),

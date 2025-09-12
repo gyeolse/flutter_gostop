@@ -96,45 +96,48 @@ class PlayerCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 아바타
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        gradient: player.isSelected 
-                            ? LinearGradient(
-                                colors: [
-                                  AppColors.primary.withValues(alpha: 0.2),
-                                  AppColors.secondary.withValues(alpha: 0.15),
-                                ],
-                              )
-                            : LinearGradient(
-                                colors: [
-                                  Colors.grey.shade50,
-                                  Colors.grey.shade100,
-                                ],
-                              ),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: player.isSelected 
-                              ? AppColors.primary 
-                              : Colors.grey.shade300,
-                          width: 3,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
+                    // 아바타 (길게 눌러서 변경 가능)
+                    GestureDetector(
+                      onLongPress: onEdit,
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          gradient: player.isSelected 
+                              ? LinearGradient(
+                                  colors: [
+                                    AppColors.primary.withValues(alpha: 0.2),
+                                    AppColors.secondary.withValues(alpha: 0.15),
+                                  ],
+                                )
+                              : LinearGradient(
+                                  colors: [
+                                    Colors.grey.shade50,
+                                    Colors.grey.shade100,
+                                  ],
+                                ),
+                          shape: BoxShape.circle,
+                          border: Border.all(
                             color: player.isSelected 
-                                ? AppColors.primary.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                                ? AppColors.primary 
+                                : Colors.grey.shade300,
+                            width: 3,
                           ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          player.avatarPath,
-                          style: const TextStyle(fontSize: 36),
+                          boxShadow: [
+                            BoxShadow(
+                              color: player.isSelected 
+                                  ? AppColors.primary.withValues(alpha: 0.2)
+                                  : Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            player.avatarPath,
+                            style: const TextStyle(fontSize: 36),
+                          ),
                         ),
                       ),
                     ),

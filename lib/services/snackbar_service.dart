@@ -50,7 +50,7 @@ class SnackbarService {
     // 기존 스낵바를 즉시 숨기기
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
     
-    // 새로운 스낵바 표시
+    // 새로운 스낵바 표시 - 하단 버튼을 가리지 않도록 위치 조정
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Row(
@@ -73,9 +73,9 @@ class SnackbarService {
                 message,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
+                  letterSpacing: 0.3,
                 ),
               ),
             ),
@@ -85,11 +85,12 @@ class SnackbarService {
         duration: duration,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
-        margin: const EdgeInsets.all(20),
-        elevation: 8,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        // 하단 버튼을 가리지 않도록 위치 조정 (더 위쪽으로)
+        margin: const EdgeInsets.fromLTRB(20, 20, 20, 120),
+        elevation: 6,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
