@@ -404,32 +404,35 @@ class CurrentGameDetailsScreen extends ConsumerWidget {
                               : null;
 
                           return Expanded(
-                            child: Padding(
+                            child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 2,
+                                horizontal: 1,
+                                vertical: 4,
                               ),
-                              child: Text(
-                                score != null
-                                    ? (score > 0
-                                          ? '+${_formatCurrency(score)}'
-                                          : score == 0
-                                          ? '0원'
-                                          : _formatCurrency(score))
-                                    : '-',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: score != null
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  score != null
                                       ? (score > 0
-                                            ? Colors.green.shade700
-                                            : score < 0
-                                            ? Colors.red.shade700
-                                            : AppColors.textSecondary)
-                                      : Colors.grey.shade500,
+                                            ? '+${_formatCurrency(score)}'
+                                            : score == 0
+                                            ? '0원'
+                                            : _formatCurrency(score))
+                                      : '-',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: score != null
+                                        ? (score > 0
+                                              ? Colors.green.shade700
+                                              : score < 0
+                                              ? Colors.red.shade700
+                                              : AppColors.textSecondary)
+                                        : Colors.grey.shade500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                 ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
                               ),
                             ),
                           );
@@ -475,30 +478,31 @@ class CurrentGameDetailsScreen extends ConsumerWidget {
                             totalScore == gameData.maxScore && totalScore > 0;
 
                         return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: Column(
-                              children: [
-                                Text(
-                                  totalScore > 0
-                                      ? '+${_formatCurrency(totalScore)}'
-                                      : _formatCurrency(totalScore),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: isLeading
-                                        ? Colors.amber.shade800
-                                        : totalScore > 0
-                                        ? Colors.green.shade800
-                                        : totalScore < 0
-                                        ? Colors.red.shade800
-                                        : AppColors.textSecondary,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 1,
+                              vertical: 4,
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                totalScore > 0
+                                    ? '+${_formatCurrency(totalScore)}'
+                                    : _formatCurrency(totalScore),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: isLeading
+                                      ? Colors.amber.shade800
+                                      : totalScore > 0
+                                      ? Colors.green.shade800
+                                      : totalScore < 0
+                                      ? Colors.red.shade800
+                                      : AppColors.textSecondary,
                                 ),
-                              ],
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                              ),
                             ),
                           ),
                         );

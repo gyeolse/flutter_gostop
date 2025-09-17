@@ -53,9 +53,10 @@ class AppTheme {
     textTheme: _lightTextTheme,
     appBarTheme: const AppBarTheme(
       centerTitle: true,
-      elevation: 0,
+      elevation: 2,
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.textLight,
+      shadowColor: AppColors.primaryDark,
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,

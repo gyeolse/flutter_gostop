@@ -40,7 +40,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
     super.initState();
     // 초기화
     for (final player in widget.players) {
-      _gwangSellingCount[player.id] = 0;
+      // _gwangSellingCount는 빈 맵으로 시작 (아무도 선택되지 않은 상태)
       _playerResults[player.id] = <PenaltyType>{};
       _specialSituations[player.id] = <SpecialSituation>{};
     }
@@ -90,11 +90,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
       // 특수 상황 추가
       _specialSituations[player.id]?.add(situation);
       
-      // 모든 광 팔기 초기화 (삼연뻑/대통령일 때는 광 판매 무관)
-      _gwangSellingCount.clear();
-      for (final p in widget.players) {
-        _gwangSellingCount[p.id] = 0;
-      }
+      // 삼연뻑/대통령일 때는 광팔이가 있더라도 게임은 자동 완료되지만 광팔이 설정은 유지
     });
 
     // 자동으로 라운드 완료
@@ -124,8 +120,8 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
     final gwangSelling = <String, bool>{};
 
     for (final player in widget.players) {
-      // 광 팔기 설정
-      gwangSelling[player.id] = (_gwangSellingCount[player.id] ?? 0) > 0;
+      // 광 팔기 설정 (쉬어가기 포함)
+      gwangSelling[player.id] = _gwangSellingCount.containsKey(player.id);
       
       // 패자 결과에 따른 패널티 설정 (복수 선택 가능)
       if (player.id != _selectedWinnerId) {
@@ -165,6 +161,9 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
       isTripleFailure: false,
     );
 
+    print('=== UI에서 전달하는 _gwangSellingCount ===');
+    print('_gwangSellingCount: $_gwangSellingCount');
+    
     widget.onRoundCompleted(scoreInput, isGameEnd, _gwangSellingCount);
     Navigator.of(context).pop();
   }
@@ -333,7 +332,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
             ),
             const SizedBox(width: 8),
             const Text(
-              '광 팔기',
+              '광 팔기 & 쉬어갈 사람',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -344,7 +343,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
         ),
         const SizedBox(height: 4),
         Text(
-          '광을 판 플레이어와 판매량을 설정하세요',
+          '광을 판 플레이어와 판매량을 설정하세요 (0장도 설정 가능)',
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey.shade600,
@@ -364,7 +363,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
           itemBuilder: (context, index) {
             final player = widget.players[index];
             final gwangCount = _gwangSellingCount[player.id] ?? 0;
-            final isSelected = gwangCount > 0;
+            final isSelected = _gwangSellingCount.containsKey(player.id);
             
             return Container(
               decoration: BoxDecoration(
@@ -399,6 +398,8 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
                                 final currentCount = _gwangSellingCount[player.id] ?? 0;
                                 if (currentCount > 0) {
                                   _gwangSellingCount[player.id] = currentCount - 1;
+                                } else {
+                                  _gwangSellingCount.remove(player.id);
                                 }
                               });
                             },
@@ -443,7 +444,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            _gwangSellingCount[player.id] = 1;
+                            _gwangSellingCount[player.id] = 0;
                           });
                         },
                         child: Container(
@@ -453,7 +454,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            '광 팔기',
+                            '쉬어가기',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
@@ -576,9 +577,9 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
 
 
   Widget _buildSimpleWinnerSelection() {
-    // 광을 판 사람들은 승자가 될 수 없음
+    // 광을 판 사람들(쉬어가는 사람들)은 승자가 될 수 없음
     final eligibleWinners = widget.players.where((player) => 
-        (_gwangSellingCount[player.id] ?? 0) == 0).toList();
+        !_gwangSellingCount.containsKey(player.id)).toList();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -593,7 +594,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
         ),
         const SizedBox(height: 4),
         Text(
-          '※ 광을 판 플레이어는 승자가 될 수 없습니다',
+          '※ 광을 판 플레이어(쉬어가는 사람)는 승자가 될 수 없습니다',
           style: TextStyle(
             fontSize: 12,
             color: Colors.red.shade600,
@@ -627,7 +628,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
               border: Border.all(color: Colors.red.shade200),
             ),
             child: Text(
-              '모든 플레이어가 광을 팔아서 승자를 선택할 수 없습니다.',
+              '모든 플레이어가 쉬어가서 승자를 선택할 수 없습니다.',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.red.shade700,
@@ -640,9 +641,9 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
   }
 
   Widget _buildPlayerResults() {
-    // 광을 판 사람들은 패자 패널티 선택에서 제외
+    // 광을 판 사람들(쉬어가는 사람들)은 패자 패널티 선택에서 제외
     final eligibleLosers = widget.players.where((player) => 
-        player.id != _selectedWinnerId && (_gwangSellingCount[player.id] ?? 0) == 0).toList();
+        player.id != _selectedWinnerId && !_gwangSellingCount.containsKey(player.id)).toList();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -657,7 +658,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
         ),
         const SizedBox(height: 4),
         Text(
-          '※ 광을 판 플레이어는 패널티 선택에서 제외됩니다',
+          '※ 광을 판 플레이어(쉬어가는 사람)는 패널티 선택에서 제외됩니다',
           style: TextStyle(
             fontSize: 12,
             color: Colors.orange.shade600,
@@ -763,7 +764,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
           ),
         ),
         // 광을 판 사람들에 대한 안내
-        if (widget.players.where((p) => p.id != _selectedWinnerId && (_gwangSellingCount[p.id] ?? 0) > 0).isNotEmpty) ...[
+        if (widget.players.where((p) => p.id != _selectedWinnerId && _gwangSellingCount.containsKey(p.id)).isNotEmpty) ...[
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -775,7 +776,7 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '광 판매자 (패널티 제외)',
+                  '쉬어가는 사람들 (승패 무관)',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -784,8 +785,8 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  widget.players.where((p) => p.id != _selectedWinnerId && (_gwangSellingCount[p.id] ?? 0) > 0)
-                      .map((p) => '${p.name} (${_gwangSellingCount[p.id]}장)')
+                  widget.players.where((p) => p.id != _selectedWinnerId && _gwangSellingCount.containsKey(p.id))
+                      .map((p) => '${p.name} (${_gwangSellingCount[p.id] ?? 0}장)')
                       .join(', '),
                   style: TextStyle(
                     fontSize: 12,
