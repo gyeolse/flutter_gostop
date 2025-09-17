@@ -16,6 +16,11 @@ class PlayerCard extends StatelessWidget {
     this.onEdit,
   });
 
+  // 아바타가 이미지 파일인지 확인하는 헬퍼 메서드
+  bool _isImageAvatar(String avatar) {
+    return avatar.contains('lib/assets/images/') && avatar.endsWith('.png');
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -134,10 +139,19 @@ class PlayerCard extends StatelessWidget {
                           ],
                         ),
                         child: Center(
-                          child: Text(
-                            player.avatarPath,
-                            style: const TextStyle(fontSize: 36),
-                          ),
+                          child: _isImageAvatar(player.avatarPath)
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    player.avatarPath,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Text(
+                                  player.avatarPath,
+                                  style: const TextStyle(fontSize: 36),
+                                ),
                         ),
                       ),
                     ),

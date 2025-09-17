@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/app_colors.dart';
 import '../../core/widgets/modern_dialog.dart';
+import '../../core/widgets/capsule_button.dart';
 import 'models/game_result.dart';
 import 'services/game_history_service.dart';
 

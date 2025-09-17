@@ -127,7 +127,7 @@ class PlayerResult extends HiveObject {
   @HiveField(6)
   final int highestScore; // 최고 점수
 
-  @HiveField(7)
+  @HiveField(7, defaultValue: 1)
   final int bestRoundNumber; // 최고 점수를 낸 라운드 번호
 
   PlayerResult({
@@ -138,7 +138,7 @@ class PlayerResult extends HiveObject {
     required this.loseCount,
     required this.finalAmount,
     required this.highestScore,
-    required this.bestRoundNumber,
+    this.bestRoundNumber = 1,
   });
 
   // Factory constructor to create from Player and game data

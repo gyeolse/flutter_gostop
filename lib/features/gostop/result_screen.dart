@@ -121,10 +121,21 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        player.avatarPath,
-                        style: const TextStyle(fontSize: 20),
-                      ),
+                      _isImageAvatar(player.avatarPath)
+                          ? Container(
+                              width: 24,
+                              height: 24,
+                              child: ClipOval(
+                                child: Image.asset(
+                                  player.avatarPath,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              player.avatarPath,
+                              style: const TextStyle(fontSize: 20),
+                            ),
                       const SizedBox(width: 8),
                       Text(
                         player.playerName,
@@ -263,7 +274,21 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 children: [
-                  Text(player.avatarPath, style: const TextStyle(fontSize: 18)),
+                  _isImageAvatar(player.avatarPath)
+                      ? Container(
+                          width: 18,
+                          height: 18,
+                          child: ClipOval(
+                            child: Image.asset(
+                              player.avatarPath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          player.avatarPath,
+                          style: const TextStyle(fontSize: 18),
+                        ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -569,6 +594,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
   String _formatCurrency(int amount) {
     return '${amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원';
+  }
+
+  bool _isImageAvatar(String avatarPath) {
+    return avatarPath.startsWith('lib/assets/images/') && avatarPath.endsWith('.png');
   }
 
   String _formatDuration(Duration duration) {

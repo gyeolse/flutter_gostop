@@ -6,13 +6,13 @@ part 'player.g.dart';
 class Player extends HiveObject {
   @HiveField(0)
   final String id;
-  
+
   @HiveField(1)
   final String name;
-  
+
   @HiveField(2)
   final String avatarPath;
-  
+
   @HiveField(3)
   final bool isSelected;
 
@@ -25,38 +25,33 @@ class Player extends HiveObject {
 
   // 타짜 캐릭터 기본 이름들
   static const List<String> defaultNames = [
-    '곽철용', // 조승우
-    '정마담', // 김혜수  
-    '아귀', // 백윤식
-    '홍팔', // 류승범
-    '고광열', // 김윤석
-    '평경장', // 김응수
-    '아구', // 고수
-    '종구', // 곽도원
-    '만수', // 김상호
-    '양팔이', // 장항선
+    '판깡장',
+    '곽칠용',
+    '쟁마담',
+    '아구',
+    '고광욜',
+    '박무섬',
+    '구니',
   ];
 
-  // 기본 아바타 아이콘들
+  // 기본 아바타 이미지들
   static const List<String> defaultAvatars = [
-    '👤', '🎭', '🎪', '🎯', '🎲', 
-    '♠️', '♥️', '♦️', '♣️', '🃏',
+    'lib/assets/images/pangangjang.png',
+    'lib/assets/images/kwakchulyeong.png',
+    'lib/assets/images/jungmadam.png',
+    'lib/assets/images/agui.png',
+    'lib/assets/images/gogangryul.png',
+    'lib/assets/images/daemori.png',
+    'lib/assets/images/goni.png',
   ];
 
   // 기본 플레이어 생성
-  factory Player.create({
-    required int index,
-    String? customName,
-  }) {
+  factory Player.create({required int index, String? customName}) {
     final id = 'player_${DateTime.now().millisecondsSinceEpoch}_$index';
     final name = customName ?? defaultNames[index % defaultNames.length];
     final avatarPath = defaultAvatars[index % defaultAvatars.length];
-    
-    return Player(
-      id: id,
-      name: name,
-      avatarPath: avatarPath,
-    );
+
+    return Player(id: id, name: name, avatarPath: avatarPath);
   }
 
   // 복사본 생성
@@ -94,7 +89,7 @@ class Player extends HiveObject {
     return Player(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      avatarPath: json['avatarPath'] ?? '👤',
+      avatarPath: json['avatarPath'] ?? 'lib/assets/images/kwakchulyeong.png',
       isSelected: json['isSelected'] ?? false,
     );
   }

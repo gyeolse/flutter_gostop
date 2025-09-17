@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_colors.dart';
+import 'capsule_button.dart';
 
 class ModernDialog extends StatelessWidget {
   final String? title;
@@ -132,47 +133,21 @@ class ModernDialog extends StatelessWidget {
   }
 
   Widget _buildAction(BuildContext context, ModernDialogAction action) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     if (action.isPrimary) {
-      return ElevatedButton(
+      return CapsuleButtons.primary(
+        text: action.text,
         onPressed: action.onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: action.color ?? AppColors.primary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          action.text,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        width: double.infinity,
+        height: 48,
+        fontSize: 16,
       );
     } else {
-      return OutlinedButton(
+      return CapsuleButtons.outlined(
+        text: action.text,
         onPressed: action.onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: action.color ?? (isDark ? AppColors.textLight : AppColors.textPrimary),
-          side: BorderSide(
-            color: action.color ?? (isDark ? AppColors.textLight.withOpacity(0.3) : AppColors.primary.withOpacity(0.3)),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          action.text,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        width: double.infinity,
+        height: 48,
+        fontSize: 16,
       );
     }
   }

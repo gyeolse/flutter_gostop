@@ -70,7 +70,7 @@ class PlayerResultAdapter extends TypeAdapter<PlayerResult> {
       loseCount: fields[4] as int,
       finalAmount: fields[5] as int,
       highestScore: fields[6] as int,
-      bestRoundNumber: fields[7] as int,
+      bestRoundNumber: fields[7] == null ? 1 : fields[7] as int,
     );
   }
 

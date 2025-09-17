@@ -3,6 +3,7 @@ import '../../../core/app_colors.dart';
 import '../../../core/widgets/capsule_button.dart';
 import '../models/player.dart';
 import 'avatar_picker_dialog.dart';
+import 'image_avatar_picker_dialog.dart';
 
 class PlayerEditDialog extends StatefulWidget {
   final Player player;
@@ -52,7 +53,8 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
   }
 
   void _selectAvatar() {
-    AvatarPickerDialog.show(
+    // 이미지 아바타 선택 다이얼로그 표시
+    ImageAvatarPickerDialog.show(
       context,
       currentAvatar: selectedAvatar,
       onAvatarSelected: (avatar) {
@@ -61,6 +63,11 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
         });
       },
     );
+  }
+  
+  // 아바타가 이미지 파일인지 확인하는 헬퍼 메서드
+  bool _isImageAvatar(String avatar) {
+    return avatar.contains('lib/assets/images/') && avatar.endsWith('.png');
   }
 
   void _save() {
@@ -194,10 +201,19 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
                     child: Stack(
                       children: [
                         Center(
-                          child: Text(
-                            selectedAvatar,
-                            style: const TextStyle(fontSize: 45),
-                          ),
+                          child: _isImageAvatar(selectedAvatar)
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    selectedAvatar,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Text(
+                                  selectedAvatar,
+                                  style: const TextStyle(fontSize: 45),
+                                ),
                         ),
                         Positioned(
                           bottom: 2,

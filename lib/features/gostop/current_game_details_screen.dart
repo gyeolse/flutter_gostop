@@ -324,10 +324,19 @@ class CurrentGameDetailsScreen extends ConsumerWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
-                                  child: Text(
-                                    player.avatarPath,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
+                                  child: _isImageAvatar(player.avatarPath)
+                                      ? ClipOval(
+                                          child: Image.asset(
+                                            player.avatarPath,
+                                            width: 36,
+                                            height: 36,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Text(
+                                          player.avatarPath,
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -676,5 +685,10 @@ class CurrentGameDetailsScreen extends ConsumerWidget {
 
   String _formatCurrency(int amount) {
     return '${amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원';
+  }
+
+  // 아바타가 이미지 파일인지 확인하는 헬퍼 메서드
+  bool _isImageAvatar(String avatar) {
+    return avatar.contains('lib/assets/images/') && avatar.endsWith('.png');
   }
 }
