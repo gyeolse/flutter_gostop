@@ -30,6 +30,7 @@ class ScoreResultDialog extends StatelessWidget {
     final winner = players.firstWhere((p) => p.id == scoreInput.winnerId);
     final sortedScores = calculatedScores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
+    
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -53,7 +54,7 @@ class ScoreResultDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // 헤더
-            _buildHeader(winner),
+            _buildHeader(winner, _isSpecialWin(winner)),
             
             // 스크롤 가능한 결과 내용
             Flexible(
@@ -81,7 +82,7 @@ class ScoreResultDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(Player winner) {
+  Widget _buildHeader(Player winner, bool isSpecialWin) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
@@ -135,7 +136,9 @@ class ScoreResultDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                '${winner.name}님이 ${scoreInput.winnerScore}점으로 승리!',
+                _isSpecialWin(winner) 
+                    ? '${winner.name}님이 ${_getSpecialWinText(winner)}로 승리!'
+                    : '${winner.name}님이 ${scoreInput.winnerScore}점으로 승리!',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -223,7 +226,9 @@ class ScoreResultDialog extends StatelessWidget {
                 Text(
                   isGameEnd 
                     ? '최종 우승자'
-                    : '${scoreInput.winnerScore}점으로 승리',
+                    : (_isSpecialWin(winner) 
+                        ? _getSpecialWinText(winner) 
+                        : '${scoreInput.winnerScore}점으로 승리'),
                   style: TextStyle(
                     fontSize: 14,
                     color: isGameEnd 
@@ -630,5 +635,21 @@ class ScoreResultDialog extends StatelessWidget {
   // 아바타가 이미지 파일인지 확인하는 헬퍼 메서드
   bool _isImageAvatar(String avatar) {
     return avatar.contains('lib/assets/images/') && avatar.endsWith('.png');
+  }
+
+  // 특수 승리인지 확인하는 헬퍼 메서드
+  bool _isSpecialWin(Player winner) {
+    return scoreInput.specialSituations['${winner.id}_tripleFailure'] == true ||
+           scoreInput.specialSituations['${winner.id}_president'] == true;
+  }
+
+  // 특수 승리 텍스트 반환
+  String _getSpecialWinText(Player winner) {
+    if (scoreInput.specialSituations['${winner.id}_tripleFailure'] == true) {
+      return '삼연뻑';
+    } else if (scoreInput.specialSituations['${winner.id}_president'] == true) {
+      return '대통령';
+    }
+    return '';
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/widgets/modern_dialog.dart';
 import '../models/player.dart';
 import '../models/score_input.dart';
 
@@ -52,6 +53,53 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
   }
 
   bool get _is4PlayerGame => widget.players.length == 4;
+
+  void _showAutoWinDialog(Player player, SpecialSituation situation) {
+    final situationName = situation == SpecialSituation.tripleFailure ? '삼연뻑' : '대통령';
+    
+    ModernConfirmDialog.show(
+      context,
+      title: '자동 승리',
+      content: '${player.name}님이 $situationName을 달성했습니다.\n${player.name}님을 승자로 처리하고 다음 라운드로 넘어가겠습니까?',
+      confirmText: '승자 처리',
+      cancelText: '수동 입력',
+      icon: Icons.emoji_events,
+      iconColor: AppColors.goStopYellow,
+      confirmColor: AppColors.primary,
+      onConfirm: () {
+        _processAutoWin(player, situation);
+      },
+      onCancel: () {
+        // 수동 입력을 위해 특수 상황만 추가
+        setState(() {
+          _specialSituations[player.id]?.add(situation);
+        });
+      },
+    );
+  }
+
+  void _processAutoWin(Player player, SpecialSituation situation) {
+    // 기본 점수 설정 (삼연뻑: 7점, 대통령: 10점)
+    final autoScore = situation == SpecialSituation.tripleFailure ? 7 : 10;
+    
+    setState(() {
+      // 승자 설정
+      _selectedWinnerId = player.id;
+      _scoreController.text = autoScore.toString();
+      
+      // 특수 상황 추가
+      _specialSituations[player.id]?.add(situation);
+      
+      // 모든 광 팔기 초기화 (삼연뻑/대통령일 때는 광 판매 무관)
+      _gwangSellingCount.clear();
+      for (final p in widget.players) {
+        _gwangSellingCount[p.id] = 0;
+      }
+    });
+
+    // 자동으로 라운드 완료
+    _completeRound(false);
+  }
 
   void _completeRound(bool isGameEnd) {
     if (_selectedWinnerId == null) {
@@ -690,13 +738,19 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
                         label: Text(situation.displayName),
                         selected: _specialSituations[player.id]?.contains(situation) ?? false,
                         onSelected: (selected) {
-                          setState(() {
-                            if (selected) {
-                              _specialSituations[player.id]?.add(situation);
-                            } else {
-                              _specialSituations[player.id]?.remove(situation);
-                            }
-                          });
+                          if (selected && (situation == SpecialSituation.tripleFailure || situation == SpecialSituation.president)) {
+                            _showAutoWinDialog(player, situation);
+                          } else {
+                            setState(() {
+                              if (selected) {
+                                // 기존 선택 모두 해제하고 새로운 특수 상황만 선택
+                                _specialSituations[player.id]?.clear();
+                                _specialSituations[player.id]?.add(situation);
+                              } else {
+                                _specialSituations[player.id]?.remove(situation);
+                              }
+                            });
+                          }
                         },
                         selectedColor: Colors.orange.shade100,
                         checkmarkColor: Colors.orange.shade700,

@@ -25,40 +25,18 @@ class HomeScreen extends ConsumerWidget {
               // App Logo/Title Section
               Column(
                 children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: AppColors.primary.withOpacity(0.3),
-                        width: 2,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.casino,
-                      size: 64,
-                      color: AppColors.primary,
-                    ),
+                  Image.asset(
+                    'lib/assets/images/gostop_score_calculator_without_background.png',
+                    width: 200,
+                    height: 200,
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    '고스톱 점수 계산기',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 16),
+                  Image.asset(
+                    'lib/assets/images/gostop_scoreboard_font.png',
+                    width: 200,
+                    height: 200,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '친구들과 함께하는 재미있는 고스톱!',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
 

@@ -29,13 +29,43 @@ class PlayersNotifier extends StateNotifier<List<Player>> {
   Future<void> addPlayer(String name) async {
     if (state.length >= 10) return;
     
+    // 중복 이름 처리
+    String finalName;
+    if (name.trim().isNotEmpty) {
+      finalName = _getUniquePlayerName(name.trim());
+    } else {
+      // 기본 이름도 중복 체크
+      final defaultName = Player.defaultNames[state.length % Player.defaultNames.length];
+      finalName = _getUniquePlayerName(defaultName);
+    }
+    
     final player = Player.create(
       index: state.length,
-      customName: name.trim().isNotEmpty ? name.trim() : null,
+      customName: finalName,
     );
     
     await PlayersService.addPlayer(player);
     state = [...state, player];
+  }
+
+  String _getUniquePlayerName(String baseName) {
+    final existingNames = state.map((player) => player.name).toSet();
+    
+    // 원본 이름이 중복되지 않으면 그대로 사용
+    if (!existingNames.contains(baseName)) {
+      return baseName;
+    }
+    
+    // 중복되면 숫자를 붙여서 고유한 이름 생성
+    int counter = 1;
+    String uniqueName = '$baseName$counter';
+    
+    while (existingNames.contains(uniqueName)) {
+      counter++;
+      uniqueName = '$baseName$counter';
+    }
+    
+    return uniqueName;
   }
 
   Future<void> removePlayer(String playerId) async {
@@ -172,14 +202,8 @@ class _PlayerSetupScreenState extends ConsumerState<PlayerSetupScreen> {
   }
 
   String? _validatePlayerName(String? value) {
-    final players = ref.read(playersProvider);
-    
     if (value != null && value.trim().isNotEmpty) {
       final trimmedValue = value.trim();
-      final isDuplicate = players.any((player) => player.name == trimmedValue);
-      if (isDuplicate) {
-        return '이미 존재하는 이름입니다';
-      }
       if (trimmedValue.length > 10) {
         return '이름은 10자 이하로 입력해주세요';
       }

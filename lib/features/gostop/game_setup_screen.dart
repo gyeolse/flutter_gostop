@@ -23,11 +23,7 @@ class GameSetupScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(
-              Icons.settings,
-              size: 80,
-              color: AppColors.primary,
-            ),
+            const Icon(Icons.settings, size: 80, color: AppColors.primary),
             const SizedBox(height: 24),
             const Text(
               '게임을 시작하기 전에\n설정을 완료해주세요',
@@ -39,7 +35,7 @@ class GameSetupScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 48),
-            
+
             // 규칙 설정 버튼
             CapsuleButtons.primary(
               text: '게임 규칙 설정',
@@ -49,9 +45,9 @@ class GameSetupScreen extends ConsumerWidget {
               height: 60,
               fontSize: 18,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 플레이어 설정 버튼
             CapsuleButtons.outlined(
               text: '플레이어 설정',
@@ -61,9 +57,9 @@ class GameSetupScreen extends ConsumerWidget {
               height: 60,
               fontSize: 18,
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // 설명 텍스트
             Container(
               padding: const EdgeInsets.all(16),
@@ -96,7 +92,7 @@ class GameSetupScreen extends ConsumerWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    '• 게임 규칙을 먼저 설정해주세요\n• 플레이어 설정은 곧 업데이트됩니다\n• 설정한 내용은 자동으로 저장됩니다',
+                    '• 게임 규칙을 먼저 설정해주세요\n• 설정한 내용은 자동으로 저장됩니다',
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
