@@ -99,16 +99,20 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
 
   void _completeRound(bool isGameEnd) {
     if (_selectedWinnerId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('승자를 선택해주세요')),
+      _showValidationDialog(
+        title: '승자 선택 필요',
+        message: '승자를 선택해주세요.\n게임을 완료하려면 반드시 승자를 선택해야 합니다.',
+        icon: Icons.person_outline,
       );
       return;
     }
 
     final winnerScore = int.tryParse(_scoreController.text) ?? 0;
     if (winnerScore <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('승자 점수를 입력해주세요')),
+      _showValidationDialog(
+        title: '점수 입력 필요',
+        message: '승자의 점수를 입력해주세요.\n점수는 1점 이상이어야 합니다.',
+        icon: Icons.score_outlined,
       );
       return;
     }
@@ -798,6 +802,32 @@ class _IntegratedRoundInputBottomSheetState extends State<IntegratedRoundInputBo
           ),
         ],
       ],
+    );
+  }
+
+  void _showValidationDialog({
+    required String title,
+    required String message,
+    required IconData icon,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ModernDialog(
+          title: title,
+          content: message,
+          icon: icon,
+          iconColor: Colors.orange.shade600,
+          actions: [
+            ModernDialogAction(
+              text: '확인',
+              onPressed: () => Navigator.of(context).pop(),
+              isPrimary: true,
+              color: Colors.orange.shade600,
+            ),
+          ],
+        );
+      },
     );
   }
 }

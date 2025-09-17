@@ -50,7 +50,7 @@ class SnackbarService {
     // 기존 스낵바를 즉시 숨기기
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
     
-    // 새로운 스낵바 표시 - 하단 버튼을 가리지 않도록 위치 조정
+    // 새로운 스낵바 표시 - 더 자연스러운 위치
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Row(
@@ -87,9 +87,13 @@ class SnackbarService {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        // 하단 버튼을 가리지 않도록 위치 조정 (더 위쪽으로)
-        margin: const EdgeInsets.fromLTRB(20, 20, 20, 120),
-        elevation: 6,
+        // 화면 하단에서 더 많은 거리 유지 (버튼을 가리지 않도록)
+        margin: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 80,
+        ),
+        elevation: 8,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );

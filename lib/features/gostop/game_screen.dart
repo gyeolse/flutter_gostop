@@ -106,6 +106,24 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
       return;
     }
+    
+    // 게임이 진행 중이라면 종료 확인 Dialog 표시
+    ModernConfirmDialog.show(
+      context,
+      title: '게임 종료',
+      content: '게임이 진행 중입니다.\n종료하고 결과 화면으로 이동하시겠습니까?',
+      confirmText: '종료하고 결과보기',
+      cancelText: '취소',
+      icon: Icons.stop_circle_outlined,
+      iconColor: AppColors.error,
+      confirmColor: AppColors.error,
+      onConfirm: () => _proceedToEndGame(),
+    );
+  }
+
+  void _proceedToEndGame() async {
+    final gameData = ref.read(gameDataProvider);
+    if (gameData == null) return;
 
     // 총합 점수를 기반으로 가짜 ScoreInput 생성 (게임 종료용)
     final winnerEntry = gameData.totalScores.entries.reduce((a, b) => a.value > b.value ? a : b);
@@ -835,7 +853,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     subtitle: '라운드별 점수 내역 보기',
                     onTap: () {
                       Navigator.pop(context);
-                      ref.read(snackbarServiceProvider).showInfo('게임 기록을 확인합니다');
+                      _showGameDetails();
                     },
                   ),
                   
@@ -855,7 +873,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     subtitle: '게임을 종료하고 홈으로 돌아가기',
                     onTap: () {
                       Navigator.pop(context);
-                      _showExitDialog();
+                      _endGame();
                     },
                   ),
                 ],
@@ -1485,5 +1503,24 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   /// 금액 포맷팅 함수
   String _formatCurrency(int amount) {
     return '${amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원';
+  }
+
+  void _showGameDetails() {
+    final gameData = ref.read(gameDataProvider);
+    if (gameData == null) return;
+
+    // 1라운드가 진행되지 않았다면 Snackbar 표시
+    if (gameData.currentRound == 1 && gameData.totalScores.values.every((s) => s == 0)) {
+      ref.read(snackbarServiceProvider).showWarning('게임을 진행해주세요.\n아직 플레이한 라운드가 없습니다.');
+      return;
+    }
+
+    // CurrentGameDetailsScreen으로 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CurrentGameDetailsScreen(gameData: gameData),
+      ),
+    );
   }
 }
